@@ -1,37 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:xi="http://www.w3.org/2001/XInclude"
-      xmlns:py="http://genshi.edgewall.org/"
-      xmlns:i18n="http://genshi.edgewall.org/i18n"
-      xmlns:og="http://opengraphprotocol.org/schema/"
-      py:strip="">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:py="http://genshi.edgewall.org/" xmlns:i18n="http://genshi.edgewall.org/i18n"
+    xmlns:og="http://opengraphprotocol.org/schema/" py:strip="">
 
-  <?python
+<?python
     from six.moves import urllib
 
     def p(params):
         return urllib.parse.urlencode(params).replace('+', '%20')
   ?>
 
-
-  <py:def function="fb_share(url)">
+<py:def function="fb_share(url)">
     <?python
       params = {
 	    'u': url,
 	  }
     ?>
     <div class="social-button fb-share-button">
-      <a href="https://www.facebook.com/sharer.php?${p(params)}"
-	 title="Share on Facebook"
-	 onclick="open_share_popup(this.href, this.target, 640, 320)"
-	 target="_top">
-	<span class="icon icon_facebook" />
-      </a>
+        <a href="https://www.facebook.com/sharer.php?${p(params)}" title="Share on Facebook"
+            onclick="open_share_popup(this.href, this.target, 640, 320)" target="_top">
+            <span class="icon icon_facebook" />
+        </a>
     </div>
-  </py:def>
+</py:def>
 
-  <py:def function="tw_share(url, text)">
+<py:def function="tw_share(url, text)">
     <!-- tweet without javascript -->
     <?python
       params = {
@@ -43,16 +37,14 @@
 	  }
     ?>
     <div class="social-button twitter-share-button">
-      <a href="https://twitter.com/share?${p(params)}"
-	 title="Share on Twitter"
-	 onclick="open_share_popup(this.href, this.target, 640, 320)"
-	 target="_top">
- 	<span class="icon icon_twitter" />
-      </a>
+        <a href="https://twitter.com/share?${p(params)}" title="Share on Twitter"
+            onclick="open_share_popup(this.href, this.target, 640, 320)" target="_top">
+            <span class="icon icon_twitter" />
+        </a>
     </div>
-  </py:def>
+</py:def>
 
-  <py:def function="masto_share(url, text)">
+<py:def function="masto_share(url, text)">
     <!-- toot without javascript -->
     <?python
       params = {
@@ -60,16 +52,14 @@
 	  }
     ?>
     <div class="social-button masto-share-button">
-      <a href="https://toot.kytta.dev/?${p(params)}"
-	 title="Share on Mastodon"
-	 onclick="open_share_popup(this.href, this.target, 640, 320)"
-	 target="_top">
- 	<span class="icon icon_masto" />
-      </a>
+        <a href="https://toot.kytta.dev/?${p(params)}" title="Share on Mastodon"
+            onclick="open_share_popup(this.href, this.target, 640, 320)" target="_top">
+            <span class="icon icon_masto" />
+        </a>
     </div>
-  </py:def>
+</py:def>
 
-  <py:def function="bsky_share(url, text)">
+<py:def function="bsky_share(url, text)">
     <!-- toot without javascript -->
     <?python
       params = {
@@ -77,24 +67,20 @@
 	  }
     ?>
     <div class="social-button bsky-share-button">
-      <a href="https://bsky.app/intent/compose?${p(params)}"
-	 title="Share on Bluesky"
-	 onclick="open_share_popup(this.href, this.target, 640, 320)"
-	 target="_top">
- 	<span class="icon icon_bsky" />
-      </a>
+        <a href="https://bsky.app/intent/compose?${p(params)}" title="Share on Bluesky"
+            onclick="open_share_popup(this.href, this.target, 640, 320)" target="_top">
+            <span class="icon icon_bsky" />
+        </a>
     </div>
-  </py:def>
+</py:def>
 
-
-  <py:def function="rss_follow()">
+<py:def function="rss_follow()">
     <div class="social-button rss-follow-button">
-      <a href="/feeds/today.rss"
-	 title="Subscribe to the New Books RSS feed.">
-	<span class="icon icon_rss" />
-	<span class="alt" i18n:comment="Subscribe to RSS feed.">Subscribe</span>
-      </a>
+        <a href="/feeds/today.rss" title="Subscribe to the New Books RSS feed.">
+            <span class="icon icon_rss" />
+            <span class="alt" i18n:comment="Subscribe to RSS feed.">Subscribe</span>
+        </a>
     </div>
-  </py:def>
+</py:def>
 
 </html>

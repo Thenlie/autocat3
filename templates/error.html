@@ -1,61 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:xi="http://www.w3.org/2001/XInclude"
-      xmlns:py="http://genshi.edgewall.org/"
-      xmlns:i18n="http://genshi.edgewall.org/i18n"
-      xmlns:og="http://opengraphprotocol.org/schema/"
-      xmlns:fb="http://www.facebook.com/2008/fbml"
-      py:strip="">
-  <xi:include href="site-layout.html" />
-  <xi:include href="social-functions.html" />
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:py="http://genshi.edgewall.org/" xmlns:i18n="http://genshi.edgewall.org/i18n"
+    xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml" py:strip="">
+<xi:include href="site-layout.html" />
+<xi:include href="social-functions.html" />
 
-
-  <head>
+<head>
     <style>
-      .icon   { background: transparent url(/pics/sprite.png) 0 0 no-repeat; }
+        .icon {
+            background: transparent url(/pics/sprite.png) 0 0 no-repeat;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="/gutenberg/pg-desktop-one.css" />
-	<link rel="stylesheet" type="text/css" href="/gutenberg/new_nav.css"/>
-    <link rel="stylesheet" type="text/css" href="/gutenberg/style2.css"/>
+    <link rel="stylesheet" type="text/css" href="/gutenberg/new_nav.css" />
+    <link rel="stylesheet" type="text/css" href="/gutenberg/style2.css" />
 
     <script type="text/javascript">//<![CDATA[
         //<![CDATA[
-        var canonical_url   = "https://www.gutenberg.org/ebooks/";
-        var lang            = "en";
-        var msg_load_more   = "Load More Results…";
-        var page_mode       = "screen";
-        var dialog_title    = "";
-        var dialog_message  = "";
+        var canonical_url = "https://www.gutenberg.org/ebooks/";
+        var lang = "en";
+        var msg_load_more = "Load More Results…";
+        var page_mode = "screen";
+        var dialog_title = "";
+        var dialog_message = "";
         //]]></script>
     <script type="text/javascript" src="/js/pg-two.js" />
-    <link rel="shortcut icon"             href="/gutenberg/favicon.ico" />
-    <meta http-equiv="Content-Type"       content="text/html; charset=UTF-8" />
+    <link rel="shortcut icon" href="/gutenberg/favicon.ico" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
 
     <!--! plain old metadata -->
-    <meta name="title"                    content="${os.message}" />
+    <meta name="title" content="${os.message}" />
     <title>${os.message}</title>
-  </head>
-  <body class="error_page">
+</head>
+
+<body class="error_page">
     <div class="container">
-    <xi:include href="menu.html" />
-    <div class="page_content" id="content" i18n:comment="error page.">
-     
-	<h1>${os.message}</h1>
- 
+        <xi:include href="menu.html" />
+        <div class="page_content" id="content" i18n:comment="error page.">
 
-      <div class="page-body">
+            <h1>${os.message}</h1>
 
+            <div class="page-body">
 
-      </div> 
+            </div>
+        </div>
     </div>
+</body>
 
- 
-    </div>
-
-
-  </body>
 </html>
-
-
