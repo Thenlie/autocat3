@@ -7,400 +7,406 @@ Read https://www.gutenberg.org/feeds/ to learn how to download Project
 Gutenberg metadata much faster than by scraping.
 -->
 
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude"
-	xmlns:py="http://genshi.edgewall.org/" xmlns:i18n="http://genshi.edgewall.org/i18n"
-	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:ebook="http://www.gutenberg.org/ebooks/" xmlns:marcrel="http://www.loc.gov/loc.terms/relators/"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xml:lang="${os.lang}">
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:py="http://genshi.edgewall.org/"
+    xmlns:i18n="http://genshi.edgewall.org/i18n"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:ebook="http://www.gutenberg.org/ebooks/"
+    xmlns:marcrel="http://www.loc.gov/loc.terms/relators/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xml:lang="${os.lang}"
+>
 
-<?python
-    import re
-    import urllib
+    <?python
+        import re
+        import urllib
 
-    from libgutenberg.MediaTypes import mediatypes as mt
-    from libgutenberg import GutenbergGlobals as gg
+        from libgutenberg.MediaTypes import mediatypes as mt
+        from libgutenberg import GutenbergGlobals as gg
 
-    os.description = "Free kindle book and epub digitized and proofread by volunteers."
+        os.description = "Free kindle book and epub digitized and proofread by volunteers."
 
-    old_header = os.entries[0].header # suppress first header as already in <h1>
-    def help_page (s = ''):
-        s = s.replace (' ', '_')
-        return '%s#%s' % ('/help/bibliographic_record.html', s)
-    def explain (s):
-        return _('Information about {topic}.').format (topic = _(s))
-    def _ (s):
-        return s
-    i = 0
+        old_header = os.entries[0].header # suppress first header as already in <h1>
+        def help_page (s = ''):
+            s = s.replace (' ', '_')
+            return '%s#%s' % ('/help/bibliographic_record.html', s)
+        def explain (s):
+            return _('Information about {topic}.').format (topic = _(s))
+        def _ (s):
+            return s
+        i = 0
 
-    maintainer = 'is-catalog-maintainer' in cherrypy.request.cookie
-  ?>
+        maintainer = 'is-catalog-maintainer' in cherrypy.request.cookie
+    ?>
 
 <xi:include href="site-layout.html" />
 <xi:include href="social-functions.html" />
 
 <py:def function="help(topic)">
-	<a href="${help_page (topic)}" title="${explain (topic)}"><span class="icon icon_help noprint" /></a>
+    <a href="${help_page (topic)}" title="${explain (topic)}"><span class="icon icon_help noprint" /></a>
 </py:def>
 
 <head xmlns:og="http://opengraphprotocol.org/schema/">
 
-	${site_head()}
+    ${site_head()}
 
-	<title>${os.title} | Project Gutenberg</title>
+    <title>${os.title} | Project Gutenberg</title>
 
-	<link rel="alternate nofollow" type="${mt.rdf}" href="${os.url ('bibrec', id = os.id, format = 'rdf')}" />
+    <link rel="alternate nofollow" type="${mt.rdf}" href="${os.url ('bibrec', id = os.id, format = 'rdf')}" />
 
-	<style>
-		.qrcode {
-			background: transparent url(${os.qrcode_url}) 0 0 no-repeat;
-		}
-	</style>
-	<meta name="google" content="notranslate" />
+    <style>
+        .qrcode {
+            background: transparent url(${os.qrcode_url}) 0 0 no-repeat;
+        }
+    </style>
+    <meta name="google" content="notranslate" />
 </head>
 
 <body class="bibrec_page">
-	<div class="container">
-		<xi:include href="menu.html" />
-		<div class="page_content" id="content" itemscope="itemscope" itemtype="http://schema.org/Book"
-			i18n:comment="On the 'bibrec' page.">
+    <div class="container">
+        <xi:include href="menu.html" />
+        <div class="page_content" id="content" itemscope="itemscope" itemtype="http://schema.org/Book"
+            i18n:comment="On the 'bibrec' page.">
 
-			<div class="breadcrumbs noprint">
-				<ul itemscope="itemscope" itemtype="https://schema.org/BreadcrumbList">
-					<py:for each="n, bc in enumerate (os.breadcrumbs)">
-						<li class="breadcrumb ${'first' if n == 0 else 'next'}" itemprop="itemListElement"
-							itemscope="itemscope" itemtype="https://schema.org/ListItem">
-							<span class="breadcrumb-separator"></span>
-							<a href="${bc[2]}" title="${bc[1]}" itemprop="item" typeof="WebPage"><span
-									itemprop="name">${bc[0]}</span></a>
-							<meta itemprop="position" content="${n}" />
-						</li>
-					</py:for>
-				</ul>
-			</div>
+            <div class="breadcrumbs noprint">
+                <ul itemscope="itemscope" itemtype="https://schema.org/BreadcrumbList">
+                    <py:for each="n, bc in enumerate (os.breadcrumbs)">
+                        <li class="breadcrumb ${'first' if n == 0 else 'next'}" itemprop="itemListElement"
+                            itemscope="itemscope" itemtype="https://schema.org/ListItem">
+                            <span class="breadcrumb-separator"></span>
+                            <a href="${bc[2]}" title="${bc[1]}" itemprop="item" typeof="WebPage"><span
+                                    itemprop="name">${bc[0]}</span></a>
+                            <meta itemprop="position" content="${n}" />
+                        </li>
+                    </py:for>
+                </ul>
+            </div>
 
-			<!-- book title -->
-			<h1 itemprop="name" id="book_title">${os.title}</h1>
-
-
-			<div class="page-body">
-				<div property="dcterms:publisher" itemprop="publisher" content="Project Gutenberg" />
-				<div itemprop="bookFormat" content="EBook" />
-
-				<div id="cover-social-wrapper">
-
-					<div py:if="os.cover_image_url" id="cover">
-						<a href="${os.read_url}" title="Read Now!">
-							<img class="cover-art" src="${os.cover_image_url}" title="Book Cover" alt=""
-								itemprop="image" />
-						</a>
-					</div>
-
-					<div py:if="not os.cover_image_url" id="no-cover">
-						<div class="icon icon_${os.title_icon}" />
-						<div class="text">No cover available</div>
-					</div>
-
-					<div id="social" class="noprint">
-						<ul>
-							<li>
-								${masto_share(os.canonical_url, "Free book at Project Gutenberg: " + os.title)}
-							</li>
-							<li>
-								${tw_share(os.canonical_url, os.twit)}
-							</li>
-							<li>
-								${fb_share(os.canonical_url)}
-							</li>
-							<li>
-								${bsky_share(os.canonical_url, "Free book at Project Gutenberg: " + os.title)}
-							</li>
-							<li>
-								<a onclick="printpage()" title="Print this page"><span class="icon icon_print" /></a>
-							</li>
-						</ul>
-					</div>
-
-					<div id="qr">
-						<span class="qrcode qrcode-desktop" title="Scan QR Code for this page." />
-					</div>
-				</div>
-
-				<div id="tabs-wrapper">
-					<div id="tabs">
-						<div id="download" i18n:comment="On the 'Download' tab of the 'bibrec' page.">
-
-							<!-- Display the summary with toggling functionality -->
-							<py:if test="os.initial_summary">
-								<div class="summary-text-container">
-									<span class="readmore-container">
-										<!-- Always visible content -->
-										${Markup(gg.insert_breaks(os.initial_summary, self_closing=False))}
-										<!-- Hidden checkbox to control the toggle -->
-										<input type="checkbox" id="toggle" class="toggle" style="display:none;" />
-										<!-- Clickable label to show more -->
-										<label for="toggle" class="readmore">
-											... <span id="read_more"> Read More</span>
-										</label>
-										<!-- The extra text that is initially hidden -->
-										<span class="toggle-content">
-											${Markup(gg.insert_breaks(os.remaining_summary, self_closing=False))}
-										</span>
-										<!-- Clickable label to show less -->
-										<label for="toggle" class="showless"> Show Less</label>
-									</span>
-								</div>
-							</py:if>
-
-							<py:for each="e in os.entries">
-								<py:if test="isinstance(e, bs.DC)">
-									<div about="[ebook:$e.project_gutenberg_id]" rel="dcterms:hasFormat">
-
-										<h2 id="download_options_header">Read or download for free </h2>
-
-										<table class="files" id="download_options_table">
-											<colgroup>
-												<col class="narrow" />
-												<col />
-												<col />
-												<col />
-												<col class="narrow noprint" />
-												<col class="narrow noprint" />
-												<col class="narrow noprint" />
-											</colgroup>
-
-											<tr>
-												<th />
-												<th> How to read <span>${help ('format')}</span></th>
-												<th class="noscreen">Url</th>
-												<th i18n:comment="Size of a file." class="right">Size</th>
-												<th class="noprint"><span>${help ('Dropbox')}</span></th>
-												<th class="noprint"><span>${help ('Google Drive')}</span></th>
-												<th class="noprint"><span>${help ('OneDrive')}</span></th>
-											</tr>
-
-											<tr py:for="i, file_ in enumerate(e.files)" py:if="not file_.hidden"
-												class="${i%2 and 'odd' or 'even'}" about="${file_.url}"
-												typeof="pgterms:file">
-												<td><span class="icon icon_${e.icon}" /></td>
-												<td property="dcterms:format" content="${file_.mediatypes[-1]}"
-													datatype="dcterms:IMT" class="unpadded icon_save"><a
-														href="/${file_.filename}" type="${file_.mediatypes[-1]}"
-														class="link ${'read_html' if file_.filetype and file_.filetype.startswith('html') else ''}"
-														title="${'Read online' if file_.filetype and file_.filetype.startswith('html') else 'Download'}">${file_.hr_filetype}</a>
-												</td>
-												<td class="noscreen">${file_.url}</td>
-												<td class="right" property="dcterms:extent" content="${file_.extent}">
-													${file_.hr_extent}</td>
-												<td class="noprint">
-													<a py:if="file_.dropbox_url" href="${file_.dropbox_url}"
-														title="Send to Dropbox." rel="nofollow"><span
-															class="icon icon_dropbox" /></a>
-												</td>
-												<td class="noprint">
-													<a py:if="file_.gdrive_url" href="${file_.gdrive_url}"
-														title="Send to Google Drive." rel="nofollow"><span
-															class="icon icon_gdrive" /></a>
-												</td>
-												<td class="noprint">
-													<a py:if="file_.msdrive_url" href="${file_.msdrive_url}"
-														title="Send to OneDrive." rel="nofollow"><span
-															class="icon icon_msdrive" /></a>
-												</td>
-											</tr>
-											<tr py:if="e.base_dir" class="${i%2 and 'odd' or 'even'}">
-												<td><span class="icon icon_folder" /></td>
-												<td colspan='5'><span class="small">
-														There may be <a class="subtle_link" rel="nofollow"
-															href="${e.base_dir}">more files</a> related to this
-														item.</span></td>
-											</tr>
-										</table>
-									</div>
-								</py:if>
-							</py:for>
-
-						</div> <!-- download -->
-
-						<div id="more_stuff">
-							<py:for each="n, e in enumerate (os.entries)">
-								<py:if test="isinstance (e, bs.Cat) and e.rel not in ('start', )">
-									<py:if test="e.header and old_header != e.header">
-										<h2 class="header middle_section_header">${e.header}</h2>
-									</py:if>
-									<?python old_header = e.header ?>
-
-									<div class="${e.class_}">
-										<!-- Similar Books Links -->
-										<a rel="nofollow" href="${e.url}" type="${e.type}" charset="${e.charset}"
-											accesskey="${str (n % 10)}" class="similar-books-link">
-											<span class="cell leftcell">
-												<span class="icon icon_${e.icon}" />
-											</span>
-											<span class="cell content">
-												<span class="title">${e.title}</span>
-												<span py:if="e.subtitle" class="subtitle">${e.subtitle}</span>
-												<span py:if="e.extra" class="extra">${e.extra}</span>
-											</span>
-											<span class="hstrut" />
-										</a>
-									</div>
-								</py:if>
-							</py:for>
-						</div> <!-- more stuff -->
-						<div id="bibrec" i18n:comment="On the 'bibrec' tab of the 'bibrec' page.">
-							<py:for each="e in os.entries">
-								<py:if test="isinstance (e, bs.DC)">
-
-									<div typeof="pgterms:ebook" about="[ebook:$e.project_gutenberg_id]">
-
-										<h2 id="about_book_header">About this eBook <span>${help (_('Table:
-												Bibliographic Record'))}</span></h2>
-
-										<table class="bibrec" id="about_book_table">
-											<colgroup>
-												<col class="narrow" />
-												<col />
-											</colgroup>
-
-											<tr py:for="author in e.authors">
-												<th>${author.role}</th>
-												<td>
-													<a href="${os.url ('author', id = author.id)}"
-														rel="marcrel:${author.marcrel}" about="/authors/${author.id}"
-														typeof="pgterms:agent"
-														itemprop="creator">${author.name_and_dates}</a>
-												</td>
-											</tr>
-
-											<tr py:for="marc in e.marcs"
-												py:if="marc.text and 'This is an automatically generated summary' not in marc.text">
-												<th>${marc.caption}</th>
-												<py:choose test="">
-													<td py:when="marc.code == '010'">
-														<a class="external" href="http://lccn.loc.gov/${marc.text}"
-															title="Look up this book in the Library of Congress catalog.">${marc.text}
-															<span class="icon icon_external_link" /></a>
-													</td>
-													<td py:when="marc.code[0]=='5'">
-														<?python
-                              text = gg.xmlspecialchars(marc.text)
-                              text = re.sub(r'(//\S+)', r'<a href="\1">\1</a>', text)
-                              text = re.sub(r'#(\d+)',  r'<a href="/ebooks/\1">#\1</a>', text)
-                            ?>
-														${ Markup (gg.insert_breaks(text, self_closing=False)) }
-													</td>
-													<td py:when="marc.code=='245'" itemprop="headline">
-														${ Markup (gg.insert_breaks(gg.xmlspecialchars(marc.text),
-														self_closing=False)) }
-													</td>
-													<td py:when="marc.code=='240'" itemprop="alternativeHeadline">
-														${ Markup (gg.insert_breaks(gg.xmlspecialchars(marc.text),
-														self_closing=False)) }
-													</td>
-													<td py:when="marc.code=='246'" itemprop="alternativeHeadline">
-														${ Markup (gg.insert_breaks(gg.xmlspecialchars(marc.text),
-														self_closing=False)) }
-													</td>
-													<td py:otherwise="">
-														${ Markup (gg.insert_breaks(gg.xmlspecialchars(marc.text),
-														self_closing=False)) }
-													</td>
-												</py:choose>
-											</tr>
-
-											<tr py:for="language in e.languages" property="dcterms:language"
-												datatype="dcterms:RFC4646" itemprop="inLanguage"
-												content="${language.id}">
-												<th>Language</th>
-												<td py:if="language.id != 'en'"><a
-														href="/browse/languages/${language.id}">${language.language}</a>
-												</td>
-												<td py:if="language.id == 'en'">${language.language}</td>
-											</tr>
-
-											<tr py:for="locc in e.loccs" property="dcterms:subject"
-												datatype="dcterms:LCC" content="${locc.id}">
-												<th>LoC Class</th>
-												<td>
-													<a href="/browse/loccs/${locc.id.lower ()}">${locc.id}:
-														${locc.locc}</a>
-												</td>
-											</tr>
-
-											<tr py:for="subject in e.subjects">
-												<th>Subject</th>
-												<td property="dcterms:subject" datatype="dcterms:LCSH">
-													<a class="block" href="${os.url ('subject', id = subject.id)}">
-														${subject.subject}
-													</a>
-												</td>
-											</tr>
-
-											<tr py:for="dcmitype in e.dcmitypes">
-												<th>Category</th>
-												<td property="dcterms:type" datatype="dcterms:DCMIType">
-													${dcmitype.description}</td>
-											</tr>
-
-											<tr>
-												<th>EBook-No.</th>
-												<td>${e.project_gutenberg_id}</td>
-											</tr>
-
-											<tr property="dcterms:issued" datatype="xsd:date"
-												content="${e.update_date}">
-												<th>Release Date</th>
-												<td itemprop="datePublished">${e.hr_release_date}</td>
-											</tr>
-
-											<tr property="dcterms:modified" datatype="xsd:date"
-												content="${e.xsd_release_date_time}"
-												py:if="e.update_date > e.release_date">
-												<th>Most Recently Updated</th>
-												<td itemprop="dateModified">${e.hr_update_date}</td>
-											</tr>
-
-											<tr>
-												<th>Copyright Status</th>
-												<td property="dcterms:rights">${e.rights}</td>
-											</tr>
-
-											<tr>
-												<th>Downloads</th>
-												<td itemprop="interactionCount" i18n:msg="count">${e.downloads}
-													downloads in the last 30 days.</td>
-											</tr>
-
-											<tr itemprop="offers" itemscope="itemscope"
-												itemtype="http://schema.org/Offer">
-												<td colspan="2">
-													<span itemprop="priceCurrency" content="USD" />
-													<span itemprop="price" content="$0.00">
-														<em>Project Gutenberg eBooks are always free!</em>
-													</span>
-													<span itemprop="availability" content="In Stock">
-														<a href="http://schema.org/InStock"></a>
-													</span>
-												</td>
-											</tr>
-
-										</table>
-
-									</div>
-								</py:if>
-							</py:for>
-
-						</div> <!--! bibrec -->
+            <!-- book title -->
+            <h1 itemprop="name" id="book_title">${os.title}</h1>
 
 
-					</div> <!--! tabs -->
-				</div> <!--! tabs-wrapper -->
-			</div> <!--! body -->
-		</div>
-		<div id="dialog" class="hidden">
-		</div>
-	</div>
-	${site_footer()}
+            <div class="page-body">
+                <div property="dcterms:publisher" itemprop="publisher" content="Project Gutenberg" />
+                <div itemprop="bookFormat" content="EBook" />
+
+                <div id="cover-social-wrapper">
+
+                    <div py:if="os.cover_image_url" id="cover">
+                        <a href="${os.read_url}" title="Read Now!">
+                            <img class="cover-art" src="${os.cover_image_url}" title="Book Cover" alt=""
+                                itemprop="image" />
+                        </a>
+                    </div>
+
+                    <div py:if="not os.cover_image_url" id="no-cover">
+                        <div class="icon icon_${os.title_icon}" />
+                        <div class="text">No cover available</div>
+                    </div>
+
+                    <div id="social" class="noprint">
+                        <ul>
+                            <li>
+                                ${masto_share(os.canonical_url, "Free book at Project Gutenberg: " + os.title)}
+                            </li>
+                            <li>
+                                ${tw_share(os.canonical_url, os.twit)}
+                            </li>
+                            <li>
+                                ${fb_share(os.canonical_url)}
+                            </li>
+                            <li>
+                                ${bsky_share(os.canonical_url, "Free book at Project Gutenberg: " + os.title)}
+                            </li>
+                            <li>
+                                <a onclick="printpage()" title="Print this page"><span class="icon icon_print" /></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="qr">
+                        <span class="qrcode qrcode-desktop" title="Scan QR Code for this page." />
+                    </div>
+                </div>
+
+                <div id="tabs-wrapper">
+                    <div id="tabs">
+                        <div id="download" i18n:comment="On the 'Download' tab of the 'bibrec' page.">
+
+                            <!-- Display the summary with toggling functionality -->
+                            <py:if test="os.initial_summary">
+                                <div class="summary-text-container">
+                                    <span class="readmore-container">
+                                        <!-- Always visible content -->
+                                        ${Markup(gg.insert_breaks(os.initial_summary, self_closing=False))}
+                                        <!-- Hidden checkbox to control the toggle -->
+                                        <input type="checkbox" id="toggle" class="toggle" style="display:none;" />
+                                        <!-- Clickable label to show more -->
+                                        <label for="toggle" class="readmore">
+                                            ... <span id="read_more"> Read More</span>
+                                        </label>
+                                        <!-- The extra text that is initially hidden -->
+                                        <span class="toggle-content">
+                                            ${Markup(gg.insert_breaks(os.remaining_summary, self_closing=False))}
+                                        </span>
+                                        <!-- Clickable label to show less -->
+                                        <label for="toggle" class="showless"> Show Less</label>
+                                    </span>
+                                </div>
+                            </py:if>
+
+                            <py:for each="e in os.entries">
+                                <py:if test="isinstance(e, bs.DC)">
+                                    <div about="[ebook:$e.project_gutenberg_id]" rel="dcterms:hasFormat">
+
+                                        <h2 id="download_options_header">Read or download for free </h2>
+
+                                        <table class="files" id="download_options_table">
+                                            <colgroup>
+                                                <col class="narrow" />
+                                                <col />
+                                                <col />
+                                                <col />
+                                                <col class="narrow noprint" />
+                                                <col class="narrow noprint" />
+                                                <col class="narrow noprint" />
+                                            </colgroup>
+
+                                            <tr>
+                                                <th />
+                                                <th> How to read <span>${help ('format')}</span></th>
+                                                <th class="noscreen">Url</th>
+                                                <th i18n:comment="Size of a file." class="right">Size</th>
+                                                <th class="noprint"><span>${help ('Dropbox')}</span></th>
+                                                <th class="noprint"><span>${help ('Google Drive')}</span></th>
+                                                <th class="noprint"><span>${help ('OneDrive')}</span></th>
+                                            </tr>
+
+                                            <tr py:for="i, file_ in enumerate(e.files)" py:if="not file_.hidden"
+                                                class="${i%2 and 'odd' or 'even'}" about="${file_.url}"
+                                                typeof="pgterms:file">
+                                                <td><span class="icon icon_${e.icon}" /></td>
+                                                <td property="dcterms:format" content="${file_.mediatypes[-1]}"
+                                                    datatype="dcterms:IMT" class="unpadded icon_save"><a
+                                                        href="/${file_.filename}" type="${file_.mediatypes[-1]}"
+                                                        class="link ${'read_html' if file_.filetype and file_.filetype.startswith('html') else ''}"
+                                                        title="${'Read online' if file_.filetype and file_.filetype.startswith('html') else 'Download'}">${file_.hr_filetype}</a>
+                                                </td>
+                                                <td class="noscreen">${file_.url}</td>
+                                                <td class="right" property="dcterms:extent" content="${file_.extent}">
+                                                    ${file_.hr_extent}</td>
+                                                <td class="noprint">
+                                                    <a py:if="file_.dropbox_url" href="${file_.dropbox_url}"
+                                                        title="Send to Dropbox." rel="nofollow"><span
+                                                            class="icon icon_dropbox" /></a>
+                                                </td>
+                                                <td class="noprint">
+                                                    <a py:if="file_.gdrive_url" href="${file_.gdrive_url}"
+                                                        title="Send to Google Drive." rel="nofollow"><span
+                                                            class="icon icon_gdrive" /></a>
+                                                </td>
+                                                <td class="noprint">
+                                                    <a py:if="file_.msdrive_url" href="${file_.msdrive_url}"
+                                                        title="Send to OneDrive." rel="nofollow"><span
+                                                            class="icon icon_msdrive" /></a>
+                                                </td>
+                                            </tr>
+                                            <tr py:if="e.base_dir" class="${i%2 and 'odd' or 'even'}">
+                                                <td><span class="icon icon_folder" /></td>
+                                                <td colspan='5'><span class="small">
+                                                        There may be <a class="subtle_link" rel="nofollow"
+                                                            href="${e.base_dir}">more files</a> related to this
+                                                        item.</span></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </py:if>
+                            </py:for>
+
+                        </div> <!-- download -->
+
+                        <div id="more_stuff">
+                            <py:for each="n, e in enumerate (os.entries)">
+                                <py:if test="isinstance (e, bs.Cat) and e.rel not in ('start', )">
+                                    <py:if test="e.header and old_header != e.header">
+                                        <h2 class="header middle_section_header">${e.header}</h2>
+                                    </py:if>
+                                    <?python old_header = e.header ?>
+
+                                    <div class="${e.class_}">
+                                        <!-- Similar Books Links -->
+                                        <a rel="nofollow" href="${e.url}" type="${e.type}" charset="${e.charset}"
+                                            accesskey="${str (n % 10)}" class="similar-books-link">
+                                            <span class="cell leftcell">
+                                                <span class="icon icon_${e.icon}" />
+                                            </span>
+                                            <span class="cell content">
+                                                <span class="title">${e.title}</span>
+                                                <span py:if="e.subtitle" class="subtitle">${e.subtitle}</span>
+                                                <span py:if="e.extra" class="extra">${e.extra}</span>
+                                            </span>
+                                            <span class="hstrut" />
+                                        </a>
+                                    </div>
+                                </py:if>
+                            </py:for>
+                        </div> <!-- more stuff -->
+                        <div id="bibrec" i18n:comment="On the 'bibrec' tab of the 'bibrec' page.">
+                            <py:for each="e in os.entries">
+                                <py:if test="isinstance (e, bs.DC)">
+
+                                    <div typeof="pgterms:ebook" about="[ebook:$e.project_gutenberg_id]">
+
+                                        <h2 id="about_book_header">About this eBook <span>${help (_('Table:
+                                                Bibliographic Record'))}</span></h2>
+
+                                        <table class="bibrec" id="about_book_table">
+                                            <colgroup>
+                                                <col class="narrow" />
+                                                <col />
+                                            </colgroup>
+
+                                            <tr py:for="author in e.authors">
+                                                <th>${author.role}</th>
+                                                <td>
+                                                    <a href="${os.url ('author', id = author.id)}"
+                                                        rel="marcrel:${author.marcrel}" about="/authors/${author.id}"
+                                                        typeof="pgterms:agent"
+                                                        itemprop="creator">${author.name_and_dates}</a>
+                                                </td>
+                                            </tr>
+
+                                            <tr py:for="marc in e.marcs"
+                                                py:if="marc.text and 'This is an automatically generated summary' not in marc.text">
+                                                <th>${marc.caption}</th>
+                                                <py:choose test="">
+                                                    <td py:when="marc.code == '010'">
+                                                        <a class="external" href="http://lccn.loc.gov/${marc.text}"
+                                                            title="Look up this book in the Library of Congress catalog.">${marc.text}
+                                                            <span class="icon icon_external_link" /></a>
+                                                    </td>
+                                                    <td py:when="marc.code[0]=='5'">
+                                                        <?python
+                                                            text = gg.xmlspecialchars(marc.text)
+                                                            text = re.sub(r'(//\S+)', r'<a href="\1">\1</a>', text)
+                                                            text = re.sub(r'#(\d+)',  r'<a href="/ebooks/\1">#\1</a>', text)
+                                                        ?>
+                                                        ${ Markup (gg.insert_breaks(text, self_closing=False)) }
+                                                    </td>
+                                                    <td py:when="marc.code=='245'" itemprop="headline">
+                                                        ${ Markup (gg.insert_breaks(gg.xmlspecialchars(marc.text),
+                                                        self_closing=False)) }
+                                                    </td>
+                                                    <td py:when="marc.code=='240'" itemprop="alternativeHeadline">
+                                                        ${ Markup (gg.insert_breaks(gg.xmlspecialchars(marc.text),
+                                                        self_closing=False)) }
+                                                    </td>
+                                                    <td py:when="marc.code=='246'" itemprop="alternativeHeadline">
+                                                        ${ Markup (gg.insert_breaks(gg.xmlspecialchars(marc.text),
+                                                        self_closing=False)) }
+                                                    </td>
+                                                    <td py:otherwise="">
+                                                        ${ Markup (gg.insert_breaks(gg.xmlspecialchars(marc.text),
+                                                        self_closing=False)) }
+                                                    </td>
+                                                </py:choose>
+                                            </tr>
+
+                                            <tr py:for="language in e.languages" property="dcterms:language"
+                                                datatype="dcterms:RFC4646" itemprop="inLanguage"
+                                                content="${language.id}">
+                                                <th>Language</th>
+                                                <td py:if="language.id != 'en'"><a
+                                                        href="/browse/languages/${language.id}">${language.language}</a>
+                                                </td>
+                                                <td py:if="language.id == 'en'">${language.language}</td>
+                                            </tr>
+
+                                            <tr py:for="locc in e.loccs" property="dcterms:subject"
+                                                datatype="dcterms:LCC" content="${locc.id}">
+                                                <th>LoC Class</th>
+                                                <td>
+                                                    <a href="/browse/loccs/${locc.id.lower ()}">${locc.id}:
+                                                        ${locc.locc}</a>
+                                                </td>
+                                            </tr>
+
+                                            <tr py:for="subject in e.subjects">
+                                                <th>Subject</th>
+                                                <td property="dcterms:subject" datatype="dcterms:LCSH">
+                                                    <a class="block" href="${os.url ('subject', id = subject.id)}">
+                                                        ${subject.subject}
+                                                    </a>
+                                                </td>
+                                            </tr>
+
+                                            <tr py:for="dcmitype in e.dcmitypes">
+                                                <th>Category</th>
+                                                <td property="dcterms:type" datatype="dcterms:DCMIType">
+                                                    ${dcmitype.description}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>EBook-No.</th>
+                                                <td>${e.project_gutenberg_id}</td>
+                                            </tr>
+
+                                            <tr property="dcterms:issued" datatype="xsd:date"
+                                                content="${e.update_date}">
+                                                <th>Release Date</th>
+                                                <td itemprop="datePublished">${e.hr_release_date}</td>
+                                            </tr>
+
+                                            <tr property="dcterms:modified" datatype="xsd:date"
+                                                content="${e.xsd_release_date_time}"
+                                                py:if="e.update_date > e.release_date">
+                                                <th>Most Recently Updated</th>
+                                                <td itemprop="dateModified">${e.hr_update_date}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>Copyright Status</th>
+                                                <td property="dcterms:rights">${e.rights}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>Downloads</th>
+                                                <td itemprop="interactionCount" i18n:msg="count">${e.downloads}
+                                                    downloads in the last 30 days.</td>
+                                            </tr>
+
+                                            <tr itemprop="offers" itemscope="itemscope"
+                                                itemtype="http://schema.org/Offer">
+                                                <td colspan="2">
+                                                    <span itemprop="priceCurrency" content="USD" />
+                                                    <span itemprop="price" content="$0.00">
+                                                        <em>Project Gutenberg eBooks are always free!</em>
+                                                    </span>
+                                                    <span itemprop="availability" content="In Stock">
+                                                        <a href="http://schema.org/InStock"></a>
+                                                    </span>
+                                                </td>
+                                            </tr>
+
+                                        </table>
+
+                                    </div>
+                                </py:if>
+                            </py:for>
+
+                        </div> <!--! bibrec -->
+
+                    </div> <!--! tabs -->
+                </div> <!--! tabs-wrapper -->
+            </div> <!--! body -->
+        </div>
+        <div id="dialog" class="hidden">
+        </div>
+    </div>
+    ${site_footer()}
 
 </body>
 
