@@ -753,8 +753,9 @@ class OpenSearch(object):
             if not self.sort_order or self.sort_order not in self.sort_orders:
                 self.sort_order = self.sort_orders [0]
 
-        self.alternate_sort_orders = [x for x in self.sort_orders
-                                      if x != self.sort_order]
+        # self.alternate_sort_orders = [x for x in self.sort_orders
+                                    #   if x != self.sort_order]
+        self.alternate_sort_orders = self.sort_orders
 
         self.sorted_by = self.sorted_msgs [self.sort_order]
         self.title += " (%s)" % self.sorted_by

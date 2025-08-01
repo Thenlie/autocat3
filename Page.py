@@ -194,19 +194,19 @@ class SearchPage(Page):
         #    self.output_suggestions(os)
 
         # add sort by links
-        if os.start_index == 1 and os.total_results > 1:
-            if 'downloads' in os.alternate_sort_orders:
-                self.sort_by_downloads(os)
-            if 'release_date' in os.alternate_sort_orders:
-                self.sort_by_release_date(os)
-            if 'title' in os.alternate_sort_orders:
-                self.sort_by_title(os)
-            if 'alpha' in os.alternate_sort_orders:
-                self.sort_alphabetically(os)
-            if 'author' in os.alternate_sort_orders:
-                self.sort_by_author(os)
-            if 'quantity' in os.alternate_sort_orders:
-                self.sort_by_quantity(os)
+        # if os.start_index == 1 and os.total_results > 1:
+        #     if 'downloads' in os.alternate_sort_orders:
+        #         self.sort_by_downloads(os)
+        #     if 'release_date' in os.alternate_sort_orders:
+        #         self.sort_by_release_date(os)
+        #     if 'title' in os.alternate_sort_orders:
+        #         self.sort_by_title(os)
+        #     if 'alpha' in os.alternate_sort_orders:
+        #         self.sort_alphabetically(os)
+        #     if 'author' in os.alternate_sort_orders:
+        #         self.sort_by_author(os)
+        #     if 'quantity' in os.alternate_sort_orders:
+        #         self.sort_by_quantity(os)
 
         os.finalize()
         self.finalize(os)
@@ -226,7 +226,7 @@ class SearchPage(Page):
         cat.rel = 'popular'
         cat.title = _('Sort by Popularity')
         cat.url = os.url_carry(sort_order='downloads')
-        cat.class_ += 'navlink grayed'
+        cat.class_ += 'navlink grayed sort_button'
         cat.icon = 'popular'
         cat.order = 4.0
         os.entries.insert(0, cat)
@@ -239,7 +239,7 @@ class SearchPage(Page):
         cat.rel = 'alphabethical'
         cat.title = _('Sort Alphabetically by Title')
         cat.url = os.url_carry(sort_order='alpha')
-        cat.class_ += 'navlink grayed'
+        cat.class_ += 'navlink grayed sort_button'
         cat.icon = 'alpha'
         cat.order = 4.1
         os.entries.insert(0, cat)
@@ -252,7 +252,7 @@ class SearchPage(Page):
         cat.rel = 'alphabethical'
         cat.title = _('Sort Alphabetically by Title')
         cat.url = os.url_carry(sort_order='title')
-        cat.class_ += 'navlink grayed'
+        cat.class_ += 'navlink grayed sort_button'
         cat.icon = 'alpha'
         cat.order = 4.1
         os.entries.insert(0, cat)
@@ -265,7 +265,7 @@ class SearchPage(Page):
         cat.rel = 'alphabethical'
         cat.title = _('Sort Alphabetically by Author')
         cat.url = os.url_carry(sort_order='author')
-        cat.class_ += 'navlink grayed'
+        cat.class_ += 'navlink grayed sort_button'
         cat.icon = 'alpha'
         cat.order = 4.2
         os.entries.insert(0, cat)
@@ -278,7 +278,7 @@ class SearchPage(Page):
         cat.rel = 'numerous'
         cat.title = _('Sort by Quantity')
         cat.url = os.url_carry(sort_order='quantity')
-        cat.class_ += 'navlink grayed'
+        cat.class_ += 'navlink grayed sort_button'
         cat.icon = 'quantity'
         cat.order = 4.3
         os.entries.insert(0, cat)
@@ -291,7 +291,7 @@ class SearchPage(Page):
         cat.rel = 'new'
         cat.title = _('Sort by Release Date')
         cat.url = os.url_carry(sort_order='release_date')
-        cat.class_ += 'navlink grayed'
+        cat.class_ += 'navlink grayed sort_button'
         cat.icon = 'date'
         cat.order = 4.4
         os.entries.insert(0, cat)
